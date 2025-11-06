@@ -1,0 +1,284 @@
+.funnel-analysis {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.funnel-analysis__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-xl);
+  gap: var(--spacing-lg);
+}
+
+.funnel-analysis__title {
+  font-size: var(--font-3xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  margin-bottom: var(--spacing-xs);
+}
+
+.funnel-analysis__subtitle {
+  font-size: var(--font-md);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.funnel-analysis__actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.funnel-analysis__date-select {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: white;
+  color: var(--text-primary);
+  font-size: var(--font-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.funnel-analysis__date-select:hover {
+  border-color: var(--color-primary);
+}
+
+.funnel-analysis__date-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(73, 80, 87, 0.1);
+}
+
+/* Overview Cards */
+.funnel-analysis__overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.funnel-analysis__overview-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  display: flex;
+  gap: var(--spacing-lg);
+  align-items: flex-start;
+  transition: all 0.2s ease;
+}
+
+.funnel-analysis__overview-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.funnel-analysis__overview-icon {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-gray-700) 100%);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.funnel-analysis__overview-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.funnel-analysis__overview-content {
+  flex: 1;
+}
+
+.funnel-analysis__overview-label {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+}
+
+.funnel-analysis__overview-value {
+  font-size: var(--font-4xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: var(--spacing-xs);
+}
+
+.funnel-analysis__overview-description {
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+}
+
+/* Stage Cards */
+.funnel-analysis__stages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.funnel-analysis__stage-card {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.funnel-analysis__stage-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.funnel-analysis__stage-header {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color-light);
+}
+
+.funnel-analysis__stage-number {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-gray-700) 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: var(--font-lg);
+  flex-shrink: 0;
+}
+
+.funnel-analysis__stage-info {
+  flex: 1;
+}
+
+.funnel-analysis__stage-title {
+  font-size: var(--font-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  margin-bottom: var(--spacing-xs);
+  text-transform: capitalize;
+}
+
+.funnel-analysis__stage-subtitle {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.funnel-analysis__stage-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.funnel-analysis__stage-metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+}
+
+.funnel-analysis__stage-metric-label {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.funnel-analysis__stage-metric-value {
+  font-size: var(--font-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.funnel-analysis__stage-metric-value--success {
+  color: var(--color-success);
+}
+
+/* Insights */
+.funnel-analysis__insights {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.funnel-analysis__insight {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 2px solid;
+}
+
+.funnel-analysis__insight--success {
+  background-color: rgba(40, 167, 69, 0.05);
+  border-color: var(--color-success);
+}
+
+.funnel-analysis__insight--warning {
+  background-color: rgba(255, 193, 7, 0.05);
+  border-color: var(--color-warning);
+}
+
+.funnel-analysis__insight--info {
+  background-color: rgba(23, 162, 184, 0.05);
+  border-color: var(--color-info);
+}
+
+.funnel-analysis__insight-icon {
+  font-size: var(--font-3xl);
+  flex-shrink: 0;
+}
+
+.funnel-analysis__insight-content {
+  flex: 1;
+}
+
+.funnel-analysis__insight-title {
+  font-size: var(--font-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  margin-bottom: var(--spacing-xs);
+}
+
+.funnel-analysis__insight-text {
+  font-size: var(--font-md);
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .funnel-analysis__header {
+    flex-direction: column;
+  }
+  
+  .funnel-analysis__overview {
+    grid-template-columns: 1fr;
+  }
+  
+  .funnel-analysis__stages {
+    grid-template-columns: 1fr;
+  }
+}
+
