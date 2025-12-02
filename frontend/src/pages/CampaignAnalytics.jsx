@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Award, Mail, TrendingUp } from 'lucide-react';
+import { ArrowUp, ArrowDown } from 'lucide-react';
 import Card from '../components/UI/Card';
 import LoadingSpinner from '../components/UI/LoadingSpinner';
 import ErrorMessage from '../components/UI/ErrorMessage';
@@ -16,6 +16,8 @@ const CampaignAnalytics = () => {
   const [topCampaigns, setTopCampaigns] = useState([]);
   const [metric, setMetric] = useState('open_rate');
   const [dateRange, setDateRange] = useState('month');
+  const [sortBy, setSortBy] = useState('metric');
+  const [sortOrder, setSortOrder] = useState('desc');
 
   const fetchData = async () => {
     try {
@@ -66,12 +68,43 @@ const CampaignAnalytics = () => {
     return option ? option.label : 'Metric';
   };
 
-  const getRankBadgeClass = (index) => {
-    if (index === 0) return 'campaign-analytics__rank--gold';
-    if (index === 1) return 'campaign-analytics__rank--silver';
-    if (index === 2) return 'campaign-analytics__rank--bronze';
-    return '';
+  const handleSort = (field) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(field);
+      setSortOrder('desc');
+    }
   };
+
+  const sortedCampaigns = [...topCampaigns].sort((a, b) => {
+    let aValue, bValue;
+    
+    switch (sortBy) {
+      case 'sent':
+        aValue = a.emails_sent;
+        bValue = b.emails_sent;
+        break;
+      case 'click_rate':
+        aValue = a.click_rate;
+        bValue = b.click_rate;
+        break;
+      case 'open_rate':
+        aValue = a.open_rate;
+        bValue = b.open_rate;
+        break;
+      case 'date':
+        aValue = new Date(a.created_at || 0);
+        bValue = new Date(b.created_at || 0);
+        break;
+      default:
+        return 0;
+    }
+    
+    if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
+    return 0;
+  });
 
   return (
     <div className="campaign-analytics">
@@ -116,66 +149,50 @@ const CampaignAnalytics = () => {
         </Card>
       ) : (
         <>
-          {/* Top 3 Winners */}
-          <div className="campaign-analytics__winners">
-            {topCampaigns.slice(0, 3).map((campaign, index) => (
-              <div key={campaign.campaign_id} className="campaign-analytics__winner-card">
-                <div className={`campaign-analytics__rank ${getRankBadgeClass(index)}`}>
-                  <Award />
-                  <span>#{index + 1}</span>
-                </div>
-                <div className="campaign-analytics__winner-content">
-                  <h3 className="campaign-analytics__winner-title">
-                    {campaign.subject || 'No Subject'}
-                  </h3>
-                  <div className="campaign-analytics__winner-metric">
-                    <span className="campaign-analytics__winner-metric-label">
-                      {getMetricLabel(metric)}:
-                    </span>
-                    <span className="campaign-analytics__winner-metric-value">
-                      {formatPercentage(campaign.metric_value)}
-                    </span>
-                  </div>
-                  <div className="campaign-analytics__winner-stats">
-                    <div className="campaign-analytics__winner-stat">
-                      <Mail className="campaign-analytics__winner-stat-icon" />
-                      <span>{formatWithCommas(campaign.emails_sent)} sent</span>
-                    </div>
-                    <div className="campaign-analytics__winner-stat">
-                      <TrendingUp className="campaign-analytics__winner-stat-icon" />
-                      <span>{formatPercentage(campaign.open_rate)} opened</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
           {/* All Campaigns Table */}
-          <Card title="All Campaigns" subtitle={`Ranked by ${getMetricLabel(metric).toLowerCase()}`}>
+          <Card title="All Emails" subtitle={`Ranked by ${getMetricLabel(metric).toLowerCase()}`}>
             <div className="campaign-analytics__table-container">
               <div className="campaign-analytics__table">
                 <div className="campaign-analytics__table-header">
-                  <div className="campaign-analytics__table-col campaign-analytics__table-col--rank">Rank</div>
-                  <div className="campaign-analytics__table-col campaign-analytics__table-col--subject">Subject</div>
-                  <div className="campaign-analytics__table-col campaign-analytics__table-col--number">Sent</div>
-                  <div className="campaign-analytics__table-col campaign-analytics__table-col--rate">Open Rate</div>
-                  <div className="campaign-analytics__table-col campaign-analytics__table-col--rate">Click Rate</div>
-                  <div className="campaign-analytics__table-col campaign-analytics__table-col--rate">{getMetricLabel(metric)}</div>
-                  <div className="campaign-analytics__table-col campaign-analytics__table-col--date">Date</div>
-                </div>
-                {topCampaigns.map((campaign, index) => (
-                  <div key={campaign.campaign_id} className="campaign-analytics__table-row">
-                    <div className="campaign-analytics__table-col campaign-analytics__table-col--rank">
-                      <div className={`campaign-analytics__rank-badge ${getRankBadgeClass(index)}`}>
-                        {index + 1}
-                      </div>
+                  <div className="campaign-analytics__table-col campaign-analytics__table-col--subject">
+                    <span>Subject</span>
+                  </div>
+                  <div className="campaign-analytics__table-col campaign-analytics__table-col--number campaign-analytics__table-col--sortable" onClick={() => handleSort('sent')}>
+                    <span>Sent</span>
+                    <div className="campaign-analytics__sort-arrows">
+                      <ArrowUp className={`campaign-analytics__arrow ${sortBy === 'sent' && sortOrder === 'asc' ? 'active' : ''}`} />
+                      <ArrowDown className={`campaign-analytics__arrow ${sortBy === 'sent' && sortOrder === 'desc' ? 'active' : ''}`} />
                     </div>
+                  </div>
+                  <div className="campaign-analytics__table-col campaign-analytics__table-col--rate campaign-analytics__table-col--sortable" onClick={() => handleSort('click_rate')}>
+                    <span>Click Rate</span>
+                    <div className="campaign-analytics__sort-arrows">
+                      <ArrowUp className={`campaign-analytics__arrow ${sortBy === 'click_rate' && sortOrder === 'asc' ? 'active' : ''}`} />
+                      <ArrowDown className={`campaign-analytics__arrow ${sortBy === 'click_rate' && sortOrder === 'desc' ? 'active' : ''}`} />
+                    </div>
+                  </div>
+                  <div className="campaign-analytics__table-col campaign-analytics__table-col--rate campaign-analytics__table-col--sortable" onClick={() => handleSort('open_rate')}>
+                    <span>Open Rate</span>
+                    <div className="campaign-analytics__sort-arrows">
+                      <ArrowUp className={`campaign-analytics__arrow ${sortBy === 'open_rate' && sortOrder === 'asc' ? 'active' : ''}`} />
+                      <ArrowDown className={`campaign-analytics__arrow ${sortBy === 'open_rate' && sortOrder === 'desc' ? 'active' : ''}`} />
+                    </div>
+                  </div>
+                  <div className="campaign-analytics__table-col campaign-analytics__table-col--date campaign-analytics__table-col--sortable" onClick={() => handleSort('date')}>
+                    <span>Date</span>
+                    <div className="campaign-analytics__sort-arrows">
+                      <ArrowUp className={`campaign-analytics__arrow ${sortBy === 'date' && sortOrder === 'asc' ? 'active' : ''}`} />
+                      <ArrowDown className={`campaign-analytics__arrow ${sortBy === 'date' && sortOrder === 'desc' ? 'active' : ''}`} />
+                    </div>
+                  </div>
+                </div>
+                {sortedCampaigns.map((campaign, index) => (
+                  <div key={campaign.campaign_id} className="campaign-analytics__table-row">
                     <div className="campaign-analytics__table-col campaign-analytics__table-col--subject">
-                      <div className="campaign-analytics__subject">
+                      <div className="campaign-analytics__subject" title={campaign.subject || 'No Subject'}>
                         {campaign.subject || 'No Subject'}
                       </div>
-                      <div className="campaign-analytics__campaign-id">
+                      <div className="campaign-analytics__campaign-id" title={campaign.campaign_id}>
                         {campaign.campaign_id.slice(0, 8)}...
                       </div>
                     </div>
@@ -183,18 +200,13 @@ const CampaignAnalytics = () => {
                       {formatWithCommas(campaign.emails_sent)}
                     </div>
                     <div className="campaign-analytics__table-col campaign-analytics__table-col--rate">
-                      <span className="campaign-analytics__badge campaign-analytics__badge--success">
+                      <span className="campaign-analytics__badge campaign-analytics__badge--primary">
                         {formatPercentage(campaign.open_rate)}
                       </span>
                     </div>
                     <div className="campaign-analytics__table-col campaign-analytics__table-col--rate">
-                      <span className="campaign-analytics__badge campaign-analytics__badge--info">
-                        {formatPercentage(campaign.click_rate)}
-                      </span>
-                    </div>
-                    <div className="campaign-analytics__table-col campaign-analytics__table-col--rate">
                       <span className="campaign-analytics__badge campaign-analytics__badge--primary">
-                        {formatPercentage(campaign.metric_value)}
+                        {formatPercentage(campaign.click_rate)}
                       </span>
                     </div>
                     <div className="campaign-analytics__table-col campaign-analytics__table-col--date">
